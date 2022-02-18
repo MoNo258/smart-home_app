@@ -32,14 +32,10 @@ export const handlers = [
   }),
 
   rest.get(`/api/v1/devices/:deviceId`, (req, res, ctx) => {
-    const { deviceId } = req.params;
+    const { deviceId } = req.params as unknown as MockDeviceIdInterface;
     return res(
       ctx.status(200),
-      // ctx.json(fakeDeviceDetails[deviceId] as SmartDeviceDetails)
-      ctx.json(fakeDeviceDetails[11] as SmartDeviceDetails)
-      // ctx.json(fakeDeviceDetails[`${deviceId}`] as SmartDeviceDetails)
+      ctx.json(fakeDeviceDetails[deviceId] as SmartDeviceDetails)
     );
   }),
 ];
-type deviceIdType = 11 | 22 | 33 | 44 | 55 | 66 | 77;
-// /users/${login}/orgs

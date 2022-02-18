@@ -50,3 +50,8 @@ interface DevicesDetailsState {
   deviceDetails: SmartDeviceDetails;
   error?: string;
 }
+
+type MockDeviceIdType = 11 | 22 | 33 | 44 | 55 | 66 | 77;
+interface MockDeviceIdInterface {
+  deviceId: MockDeviceIdType;
+}

@@ -15,10 +15,10 @@ const animationEffect = css`
 const SkeletonListStyled = styled.div`
   box-shadow: 0 4px 10px 0 rgba(33, 33, 33, 0.15);
   border-radius: 4px;
-  height: 80px;
+  height: 90px;
   position: relative;
   overflow: hidden;
-  margin: 20px 0;
+  margin: 20px;
 
   &:before {
     content: "";
