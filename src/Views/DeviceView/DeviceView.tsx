@@ -2,11 +2,11 @@ import * as React from "react";
 import { useNavigate } from "react-router-dom";
 import { Breadcrumb, ButtonProps, Card, Image } from "semantic-ui-react";
 import styled from "styled-components";
-import { deleteSingleUser, getSingleUser } from "../../Api";
 import ButtonComponent from "../../Components/ButtonComponent";
-import { UsersOrganizations } from "../../redux/UsersOrganizations";
+import { useGlobalDispatch, useGlobalState } from "../../helpers";
+import { DeviceDetailsAction } from "../../redux";
 
-export const SingleViewStyled = styled.div`
+export const DeviceViewStyled = styled.div`
   padding: 2rem;
   height: 100vh;
   display: flex;
@@ -33,45 +33,19 @@ export const SingleViewStyled = styled.div`
   }
 `;
 
-const SingleView: React.FC = () => {
+const DeviceView: React.FC = () => {
   const navigate = useNavigate();
-  const [loading, setLoading] = React.useState(true);
-  const [userInfo, setUserInfo] = React.useState<IUser>({
-    login: "",
-    id: 0,
-    node_id: "",
-    avatar_url: "",
-    gravatar_id: "",
-    url: "",
-    html_url: "",
-    followers_url: "",
-    following_url: "",
-    gists_url: "",
-    starred_url: "",
-    subscriptions_url: "",
-    organizations_url: "",
-    repos_url: "",
-    events_url: "",
-    received_events_url: "",
-    type: "User",
-    site_admin: false,
-    name: "",
-    company: "",
-    blog: "",
-    location: "",
-    email: null,
-    hireable: null,
-    bio: null,
-    twitter_username: "",
-    public_repos: 0,
-    public_gists: 0,
-    followers: 0,
-    following: 0,
-    created_at: "",
-    updated_at: "",
-  });
   const idParam = window.location.pathname;
   const [isDeleted, setIsDeleted] = React.useState(false);
+  const dispatch = useGlobalDispatch();
+  const deviceDetails = useGlobalState(
+    (state) => state.deviceDetails.deviceDetails
+  );
+  const isLoading = useGlobalState((state) => state.deviceDetails.loading);
+
+  React.useEffect(() => {
+    dispatch(DeviceDetailsAction.fetchDeviceDetails(idParam.slice(1)));
+  }, []);
 
   const visitHomepage = (
     e: React.MouseEvent<HTMLButtonElement, MouseEvent>,
@@ -88,24 +62,12 @@ const SingleView: React.FC = () => {
     e: React.MouseEvent<HTMLButtonElement, MouseEvent>,
     data: ButtonProps
   ) => {
-    deleteSingleUser(idParam.slice(1));
+    // deleteSingleUser(idParam.slice(1));
     setIsDeleted(true);
   };
 
-  React.useEffect(() => {
-    getSingleUser(idParam.slice(1)).then(
-      (result) => setUserInfo(result),
-      () => navigate(`/not/Found`) // I guess this is not exactly how this should be handled but couldn't think of anything else
-    );
-  }, [idParam, navigate]);
-  React.useEffect(() => {
-    userInfo?.login && userInfo.login.length !== 0
-      ? setLoading(false)
-      : setLoading(true);
-  }, [userInfo]);
-
   return (
-    <SingleViewStyled className="userView">
+    <DeviceViewStyled className="userView">
       <Breadcrumb icon="right angle" sections={sections} />
       <div className="userView_card">
         {!isDeleted ? (
@@ -114,27 +76,22 @@ const SingleView: React.FC = () => {
               className="userView_image"
               centered
               size="medium"
-              src={userInfo.avatar_url}
+              src={deviceDetails.type}
             />
             <Card.Content>
-              <Card.Header textAlign="center">{userInfo.login}</Card.Header>
-              <Card.Meta textAlign="center">{userInfo.name}</Card.Meta>
+              <Card.Header textAlign="center">{deviceDetails.name}</Card.Header>
+              <Card.Meta textAlign="center">{deviceDetails.id}</Card.Meta>
               <Card.Description textAlign="center">
-                Bio: {userInfo.bio}
+                Type: {deviceDetails.type}
               </Card.Description>
               <Card.Description textAlign="center">
-                Location: {userInfo.location}
+                state: {deviceDetails.connectionState}
               </Card.Description>
             </Card.Content>
-            <Card.Content extra>
-              <a href={userInfo.blog} target="_blank" rel="noreferrer">
-                {userInfo.blog}
-              </a>
-              <UsersOrganizations user={idParam.slice(1)} />
-            </Card.Content>
+
             <Card.Content textAlign="center">
               <ButtonComponent
-                loading={loading}
+                loading={isLoading}
                 isIcon
                 iconName="trash"
                 buttonText="Delete user"
@@ -149,7 +106,7 @@ const SingleView: React.FC = () => {
             <Card.Content textAlign="center">User is DELETED</Card.Content>
             <Card.Content textAlign="center">
               <ButtonComponent
-                loading={loading}
+                loading={isLoading}
                 isIcon
                 iconName="home"
                 buttonText="Back to Homepage"
@@ -161,8 +118,8 @@ const SingleView: React.FC = () => {
           </Card>
         )}
       </div>
-    </SingleViewStyled>
+    </DeviceViewStyled>
   );
 };
 
-export default SingleView;
+export default DeviceView;

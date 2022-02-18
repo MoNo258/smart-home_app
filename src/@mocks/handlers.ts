@@ -1,6 +1,6 @@
 // src/mocks/handlers.js
 import { rest } from "msw";
-import { fakeUsersArray, fakeUsersOrg } from "./fakers";
+import { allDevicesBasic, fakeDeviceDetails } from "./fakers";
 
 export const handlers = [
   rest.post("/login", (req, res, ctx) => {
@@ -11,27 +11,35 @@ export const handlers = [
       ctx.status(200)
     );
   }),
-  rest.get("/users", (req, res, ctx) => {
-    // Check if the user is authenticated in this session
-    // const isAuthenticated = sessionStorage.getItem("is-authenticated");
-    // if (!isAuthenticated) {
-    //   // If not authenticated, respond with a 403 error
-    //   return res(
-    //     ctx.status(403),
-    //     ctx.json({
-    //       errorMessage: "Not authorized",
-    //     })
-    //   );
-    // }
-    // If authenticated, return a mocked user details
-    return res(ctx.status(200), ctx.json(fakeUsersArray as IUser[]));
+  // rest.get("/users", (req, res, ctx) => {
+  //   Check if the user is authenticated in this session
+  //   const isAuthenticated = sessionStorage.getItem("is-authenticated");
+  //   if (!isAuthenticated) {
+  //     // If not authenticated, respond with a 403 error
+  //     return res(
+  //       ctx.status(403),
+  //       ctx.json({
+  //         errorMessage: "Not authorized",
+  //       })
+  //     );
+  //   }
+  //   If authenticated, return a mocked user details
+  //   return res(ctx.status(200), ctx.json(fakeUsersArray as IUser[]));
+  // }),
+
+  rest.get("/api/v1/devices", (req, res, ctx) => {
+    return res(ctx.status(200), ctx.json(allDevicesBasic as SmartDevice[]));
   }),
-  rest.get("/users/:username", (req, res, ctx) => {
-    return res(ctx.status(200), ctx.json(fakeUsersArray as IUser[]));
-  }),
-  rest.get("/users/:username/orgs", (req, res, ctx) => {
-    return res(ctx.status(200), ctx.json(fakeUsersOrg as IUsersOrgs[]));
+
+  rest.get(`/api/v1/devices/:deviceId`, (req, res, ctx) => {
+    const { deviceId } = req.params;
+    return res(
+      ctx.status(200),
+      // ctx.json(fakeDeviceDetails[deviceId] as SmartDeviceDetails)
+      ctx.json(fakeDeviceDetails[11] as SmartDeviceDetails)
+      // ctx.json(fakeDeviceDetails[`${deviceId}`] as SmartDeviceDetails)
+    );
   }),
 ];
-
+type deviceIdType = 11 | 22 | 33 | 44 | 55 | 66 | 77;
 // /users/${login}/orgs

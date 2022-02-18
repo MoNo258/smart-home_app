@@ -1,16 +1,13 @@
-export async function getUsersWithParams(page: number) {
+export async function getDeviceDetails(deviceId: string) {
   try {
-    const response = await fetch(`https://api.github.com/users?page=${page}`, {
+    const response = await fetch(`/api/v1/devices/${deviceId}`, {
       method: "GET",
       headers: {
         Accept: `application/json;odata=nometadata;`,
       },
     });
     if (response.status === 200) {
-      return (await response.json()) as {
-        data: IUsersSlice["usersArray"];
-        total_count: number;
-      };
+      return (await response.json()) as SmartDeviceDetails;
     } else {
       throw Error(`${response.status}: ${response.statusText}`);
     }

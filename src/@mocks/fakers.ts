@@ -1,113 +1,162 @@
 import { faker } from "@faker-js/faker";
 
-const name1 = faker.name.findName();
-const email1 = faker.internet.email();
-const login1 = faker.random.word();
-const avatar1 = faker.internet.avatar();
-const url1 = faker.internet.url();
-const bio1 = faker.random.randomWords();
-const date1 = faker.date.past();
+const roomsType = [
+  "Kitchen",
+  "Hall",
+  "Bedroom",
+  "Bathroom",
+  "Living room",
+  "Master bedroom",
+  "Guest bathroom",
+  "Porch",
+];
+const connectionState = ["connected", "disconnected", "poorConnection"];
 
-const firstRandomUser: IUser = {
-  login: login1,
-  id: 9876,
-  node_id: "1234",
-  avatar_url: avatar1,
-  gravatar_id: "1234",
-  url: url1,
-  html_url: url1,
-  followers_url: "string",
-  following_url: "string",
-  gists_url: "string",
-  starred_url: "string",
-  subscriptions_url: "string",
-  organizations_url: "string",
-  repos_url: "string",
-  events_url: "string",
-  received_events_url: "string",
-  type: "User",
-  site_admin: false,
-  name: name1,
-  company: "company name",
-  blog: "string",
-  location: "location",
-  email: email1,
-  hireable: "",
-  bio: bio1,
-  twitter_username: "",
-  public_repos: 123,
-  public_gists: 123,
-  followers: 1,
-  following: 2,
-  created_at: date1.toString(),
-  updated_at: date1.toString(),
-};
-
-const name2 = faker.name.findName();
-const email2 = faker.internet.email();
-const login2 = faker.random.word();
-const avatar2 = faker.internet.avatar();
-const url2 = faker.internet.url();
-const bio2 = faker.random.randomWords();
-const date2 = faker.date.past();
-const secondRandomUser: IUser = {
-  login: login2,
-  id: 1234,
-  node_id: "1234",
-  avatar_url: avatar2,
-  gravatar_id: "1234",
-  url: url2,
-  html_url: url2,
-  followers_url: "string",
-  following_url: "string",
-  gists_url: "string",
-  starred_url: "string",
-  subscriptions_url: "string",
-  organizations_url: "string",
-  repos_url: "string",
-  events_url: "string",
-  received_events_url: "string",
-  type: "User",
-  site_admin: false,
-  name: name2,
-  company: "company name",
-  blog: "string",
-  location: "location",
-  email: email2,
-  hireable: "",
-  bio: bio2,
-  twitter_username: "",
-  public_repos: 123,
-  public_gists: 123,
-  followers: 1,
-  following: 2,
-  created_at: date2.toString(),
-  updated_at: date2.toString(),
-};
-
-export const fakeUsersArray: IUser[] = [firstRandomUser, secondRandomUser];
-
-export const fakeUsersOrg: IUsersOrgs[] = [
+export const allDevicesBasic: SmartDevice[] = [
   {
-    login: faker.company.companyName(),
-    id: 12,
-    node_id: "string",
-    url: "string",
-    repos_url: "string",
-    events_url: "string",
-    hooks_url: "string",
-    issues_url: "string",
-    members_url: "string",
-    public_members_url: "string",
-    avatar_url: "string",
-    description: faker.company.catchPhraseDescriptor(),
+    type: "bulb",
+    id: `11`,
+    name: `${faker.random.arrayElement(roomsType)} - ${faker.random.words(2)}`,
+    connectionState: `${faker.random.arrayElement(
+      connectionState
+    )}` as connectionStateType,
+  },
+  {
+    type: "temperatureSensor",
+    id: `22`,
+    name: `${faker.random.arrayElement(roomsType)} - ${faker.random.words(2)}`,
+    connectionState: `${faker.random.arrayElement(
+      connectionState
+    )}` as connectionStateType,
+  },
+  {
+    type: "outlet",
+    id: `33`,
+    name: `${faker.random.arrayElement(roomsType)} - ${faker.random.words(2)}`,
+    connectionState: `${faker.random.arrayElement(
+      connectionState
+    )}` as connectionStateType,
+  },
+  {
+    type: "bulb",
+    id: `44`,
+    name: `${faker.random.arrayElement(roomsType)} - ${faker.random.words(2)}`,
+    connectionState: `${faker.random.arrayElement(
+      connectionState
+    )}` as connectionStateType,
+  },
+  {
+    type: "temperatureSensor",
+    id: `55`,
+    name: `${faker.random.arrayElement(roomsType)} - ${faker.random.words(2)}`,
+    connectionState: `${faker.random.arrayElement(
+      connectionState
+    )}` as connectionStateType,
+  },
+  {
+    type: "outlet",
+    id: `66`,
+    name: `${faker.random.arrayElement(roomsType)} - ${faker.random.words(2)}`,
+    connectionState: `${faker.random.arrayElement(
+      connectionState
+    )}` as connectionStateType,
+  },
+  {
+    type: "outlet",
+    id: `77`,
+    name: `${faker.random.arrayElement(roomsType)} - ${faker.random.words(2)}`,
+    connectionState: `${faker.random.arrayElement(
+      connectionState
+    )}` as connectionStateType,
   },
 ];
 
-//   const fakeEmployee = {
-//         name: '{{name.firstName}}',
-//         surname: '{{name.lastName}}',
-//         email: '{{internet.email}}',
-//         directTeam: '{{commerce.productName}}',
-//     };
-//     const employee = JSON.parse(faker.fake(JSON.stringify(fakeEmployee)));
+const fakeDeviceDetails11: SmartDeviceDetails = {
+  type: "bulb",
+  id: `11`,
+  name: `${faker.random.arrayElement(roomsType)} - ${faker.random.words(2)}`,
+  connectionState: `${faker.random.arrayElement(
+    connectionState
+  )}` as connectionStateType,
+  isTurnedOn: faker.datatype.boolean(),
+  brightness: Math.floor(Math.random() * 101),
+  color: faker.vehicle.color(),
+};
+const fakeDeviceDetails22: SmartDeviceDetails = {
+  type: "temperatureSensor",
+  id: `22`,
+  name: `${faker.random.arrayElement(roomsType)} - ${faker.random.words(2)}`,
+  connectionState: `${faker.random.arrayElement(
+    connectionState
+  )}` as connectionStateType,
+  temperature: faker.datatype.number({ min: 15, max: 38, precision: 0.01 }),
+};
+const fakeDeviceDetails33: SmartDeviceDetails = {
+  type: "outlet",
+  id: `33`,
+  name: `${faker.random.arrayElement(roomsType)} - ${faker.random.words(2)}`,
+  connectionState: `${faker.random.arrayElement(
+    connectionState
+  )}` as connectionStateType,
+  isTurnedOn: faker.datatype.boolean(),
+  powerConsumption: faker.datatype.number({
+    max: 5000,
+  }),
+};
+const fakeDeviceDetails44: SmartDeviceDetails = {
+  type: "bulb",
+  id: `44`,
+  name: `${faker.random.arrayElement(roomsType)} - ${faker.random.words(2)}`,
+  connectionState: `${faker.random.arrayElement(
+    connectionState
+  )}` as connectionStateType,
+  isTurnedOn: faker.datatype.boolean(),
+  brightness: Math.floor(Math.random() * 101),
+  color: faker.vehicle.color(),
+};
+const fakeDeviceDetails55: SmartDeviceDetails = {
+  type: "temperatureSensor",
+  id: `55`,
+  name: `${faker.random.arrayElement(roomsType)} - ${faker.random.words(2)}`,
+  connectionState: `${faker.random.arrayElement(
+    connectionState
+  )}` as connectionStateType,
+  temperature: faker.datatype.number({ min: 15, max: 38, precision: 0.01 }),
+};
+const fakeDeviceDetails66: SmartDeviceDetails = {
+  type: "outlet",
+  id: `66`,
+  name: `${faker.random.arrayElement(roomsType)} - ${faker.random.words(2)}`,
+  connectionState: `${faker.random.arrayElement(
+    connectionState
+  )}` as connectionStateType,
+  isTurnedOn: faker.datatype.boolean(),
+  powerConsumption: faker.datatype.number({
+    max: 5000,
+  }),
+};
+const fakeDeviceDetails77: SmartDeviceDetails = {
+  type: "outlet",
+  id: `77`,
+  name: `${faker.random.arrayElement(roomsType)} - ${faker.random.words(2)}`,
+  connectionState: `${faker.random.arrayElement(
+    connectionState
+  )}` as connectionStateType,
+  isTurnedOn: faker.datatype.boolean(),
+  powerConsumption: faker.datatype.number({
+    max: 5000,
+  }),
+};
+
+export const fakeDeviceDetails = {
+  11: fakeDeviceDetails11,
+  22: fakeDeviceDetails22,
+  33: fakeDeviceDetails33,
+  44: fakeDeviceDetails44,
+  55: fakeDeviceDetails55,
+  66: fakeDeviceDetails66,
+  77: fakeDeviceDetails77,
+  // 88: fakeDeviceDetails88,
+  // 99: fakeDeviceDetails99,
+  // 00: fakeDeviceDetails00,
+};

@@ -1,11 +1,4 @@
 // export * from "./add";
 // export * from "./delete";
-export * from "./addSingleUser";
-export * from "./deleteSingleUser";
-export * from "./getMovieById";
-export * from "./getPopularList";
-export * from "./getSingleUser";
-export * from "./getTopRated";
-export * from "./getUsers";
-export * from "./getUsersOrganizations";
-export * from "./getUsersWithParams";
+export * from "./getDeviceDetails";
+export * from "./getDevices";

@@ -3,15 +3,14 @@ import React from "react";
 import { Provider } from "react-redux";
 import { AnyAction } from "redux";
 import { createLogger } from "redux-logger";
-import UsersListReducer from "./UsersList/UsersList.slice";
-// import TeamsReducer from './Teams/Teams.slice'
-import UsersOrganizationsReducer from "./UsersOrganizations/UsersOrganizations.slice";
+import DeviceDetailsReducer from "./DeviceDetails/DeviceDetails.slice";
+import DevicesListReducer from "./DevicesList/DevicesList.slice";
 
 const store = configureStore({
   reducer: {
     // teamsList: TeamsReducer,
-    usersOrgsList: UsersOrganizationsReducer,
-    usersList: UsersListReducer,
+    devicesList: DevicesListReducer,
+    deviceDetails: DeviceDetailsReducer,
   },
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware().concat(

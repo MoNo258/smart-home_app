@@ -33,7 +33,7 @@ export type ListItemProps = {
   description: string;
   fullName: string;
   id: string;
-  type: UserType;
+  type: string;
   showUser: (e: React.MouseEvent<HTMLAnchorElement, MouseEvent>) => void;
 };
 
