@@ -1,17 +1,16 @@
-import faker from "@faker-js/faker";
-import _times from "lodash/times";
 import React from "react";
 import { useNavigate } from "react-router-dom";
 import {
   Button,
   ButtonProps,
   Card,
-  Confirm,
+  Dimmer,
+  Header,
   Icon,
   Label,
   Message,
   Progress,
-  Segment,
+  Segment
 } from "semantic-ui-react";
 import { displayConnection, displayDeviceType } from "src/utils";
 import ButtonComponent from "../../Components/ButtonComponent";
@@ -31,6 +30,8 @@ const DeviceDetails: React.FC<DeviceDetailsProps> = () => {
   const [isDeleted, setIsDeleted] = React.useState(false);
 
   console.log("deviceDetails", deviceDetails);
+
+  const isConnected = deviceDetails.connectionState !== 'disconnected'
 
   // React.useEffect(() => {
   //   dispatch(DeviceDetailsAction.fetchDeviceDetails(idParam.slice(1)));
@@ -54,37 +55,50 @@ const DeviceDetails: React.FC<DeviceDetailsProps> = () => {
   const [activeIndex, setActiveIndex] = React.useState(0);
   const handleSliderChange = (e: React.ChangeEvent<HTMLInputElement>) =>
     setActiveIndex(Number(e.target.value));
-  const panels = _times(3, (i) => ({
-    key: `panel-${i}`,
-    title: faker.lorem.sentence(),
-    content: faker.lorem.paragraphs(),
-  }));
+  const lightOptionColor = [
+    {
+      key: "option-1",
+      name: "Daylight",
+      tempInKelvin: 6500,
+      color: "#F1F5F8",
+    },
+    {
+      key: "option-2",
+      name: "Natural white",
+      tempInKelvin: 5000,
+      color: "#F9FAFC",
+    },
+    {
+      key: "option-3",
+      name: "Cool white",
+      tempInKelvin: 4100,
+      color: "#FFFCF6",
+    },
+    {
+      key: "option-4",
+      name: "Warm white",
+      tempInKelvin: 3500,
+      color: "#FFF6E5",
+    },
+    {
+      key: "option-5",
+      name: "Soft white",
+      tempInKelvin: 2700,
+      color: "#FFF3DB",
+    },
+  ];
 
   const [percent, setPercent] = React.useState(0);
   const increment = () =>
     setPercent((prevState) => (prevState >= 100 ? 0 : prevState + 10));
+  const decrement = () =>
+    setPercent((prevState) => (prevState <= 0 ? 100 : prevState - 10));
 
   const [isOpen, setIsOpen] = React.useState(false);
 
   return (
     <Card fluid>
       <Card.Content>
-        {/* <Card.Header textAlign="center">
-          <div
-            style={{
-              display: "flex",
-              width: "100%",
-              justifyContent: "center",
-              alignItems: "center",
-            }}
-          >
-            <Icon
-              name={displayDeviceType(deviceDetails.type).name}
-              size="large"
-            />
-            {deviceDetails.name}
-          </div>
-        </Card.Header> */}
         <Card.Header>
           <div
             style={{
@@ -95,10 +109,9 @@ const DeviceDetails: React.FC<DeviceDetailsProps> = () => {
             <div style={{ width: "500px", fontSize: "18px" }}>
               <Segment loading={isLoading}>
                 <Label
-                  color={`${
-                    displayConnection(deviceDetails.connectionState)
-                      .colorSemantic
-                  }`}
+                  color={`${displayConnection(deviceDetails.connectionState)
+                    .colorSemantic
+                    }`}
                   ribbon
                 >
                   {displayConnection(deviceDetails.connectionState).state}
@@ -116,131 +129,148 @@ const DeviceDetails: React.FC<DeviceDetailsProps> = () => {
           </div>
         </Card.Header>
         <Card.Meta textAlign="center">
-          <div style={{ padding: "10px" }}>
+          <div style={{ paddingTop: "10px" }}>
             {displayDeviceType(deviceDetails.type).description}
           </div>
         </Card.Meta>
-        <Card.Description textAlign="center">
-          Type: {deviceDetails.type}
-        </Card.Description>
-        <Card.Description textAlign="center">
-          state: {deviceDetails.connectionState}
-        </Card.Description>
-        {deviceDetails.type !== "temperatureSensor" && (
-          <Card.Description textAlign="center">
-            <Icon name="power" size="large" />
-            <Icon name="power off" size="large" />
-            <Icon name="lightbulb" size="large" color="yellow" />
-            <Icon name="lightbulb outline" size="large" color="grey" />
-            <Icon name="thermometer empty" size="large" color="grey" />
-            <Icon name="thermometer empty" size="large" color="blue" />
-            <Icon name="thermometer half" size="large" color="orange" />
-            <Icon name="thermometer full" size="large" color="red" />
-            <Icon.Group size="big">
-              <Icon name="circle outline" size="large" color="grey" />
-              <Icon name="power" color="red" />
-            </Icon.Group>
-            <Icon.Group size="big">
-              <Icon name="circle outline" size="large" color="grey" />
-              <Icon name="power" color="green" />
-            </Icon.Group>
-            <Icon.Group size="big">
-              <Icon size="large" color="grey" name="dont" />
-              <Icon name="plug" color="grey" />
-            </Icon.Group>
-            <Icon.Group size="big">
-              <Icon name="circle outline" size="large" color="green" />
-              <Icon name="plug" color="green" />
-            </Icon.Group>
-            <Icon.Group size="big">
-              <Icon name="dont" size="large" color="grey" />
-              <Icon name="lightbulb" color="grey" />
-            </Icon.Group>
-            <Icon.Group size="big">
-              <Icon name="circle outline" size="large" color="green" />
-              <Icon name="lightbulb" color="green" />
-            </Icon.Group>
-            <Icon.Group size="big">
-              <Icon name="lightbulb outline" />
-              <Icon name="add" corner="bottom right" />
-            </Icon.Group>
-            <Icon.Group size="big">
-              <Icon name="lightbulb outline" />
-              <Icon name="minus" corner="bottom right" />
-            </Icon.Group>
-            <Icon.Group size="big">
-              <Icon name="lightbulb" />
-              <Icon name="add" corner="bottom right" />
-            </Icon.Group>
-            <Icon.Group size="big">
-              <Icon name="lightbulb" />
-              <Icon name="minus" corner="bottom right" />
-            </Icon.Group>
-            {/* status: {deviceDetails.isTurnedOn} */}
-          </Card.Description>
-        )}
-        {deviceDetails.type === "outlet" && (
-          <Card.Description textAlign="center">
-            Power consumption: {deviceDetails.powerConsumption}
-          </Card.Description>
-        )}
-        {/* <Card.Description textAlign="center">
-          <div style={{ width: "210px" }}>
-            <Segment raised>
-              <Label as="a" color="red" ribbon>
-                Overview
-              </Label>
-              <span>Account Details</span>
-            </Segment>
-          </div>
-        </Card.Description> */}
-      </Card.Content>
-      <Card.Content>
-        <Message negative>
-          <Message.Header>
-            Sorry, you cannot control this device since it's disconnected.
-          </Message.Header>
-          <p>Check the connection</p>
-        </Message>
-      </Card.Content>
-      <Card.Content>
-        <Message warning>
-          <Message.Header>
-            Warning! Control of this device might be difficult due to poor
-            connection.
-          </Message.Header>
-          <p>Check the connection</p>
-        </Message>
-      </Card.Content>
-      <Card.Content>
-        <Segment secondary>
-          <div>activeIndex: {activeIndex}</div>
-          <input
-            type="range"
-            min="-1"
-            max={panels.length - 1}
-            value={activeIndex}
-            onChange={handleSliderChange}
-          />
-        </Segment>
-      </Card.Content>
-      <Card.Content>
-        <div>
-          <Progress percent={percent} indicating />
-          <Button onClick={increment}>Increment</Button>
-        </div>
-      </Card.Content>
-      <Card.Content>
-        <div>
-          <Button onClick={() => setIsOpen(true)}>Show</Button>
-          <Confirm
-            open={isOpen}
-            onCancel={() => setIsOpen(false)}
-            onConfirm={() => setIsOpen(false)}
-          />
-        </div>
       </Card.Content>
 
+      <Dimmer.Dimmable blurring dimmed={!isConnected}>
+        <Dimmer active={!isConnected} inverted>
+          <Message icon negative>
+            <Icon name='exclamation triangle' color='red' />
+            <Message.Content>
+              <Message.Header>
+                Sorry, you cannot control this device since it's disconnected.
+              </Message.Header>
+            </Message.Content>
+          </Message>
+        </Dimmer>
+
+        <Card.Content>
+          {deviceDetails.type !== "temperatureSensor" && (
+            <Card.Description textAlign="center">
+              Status: {(deviceDetails.isTurnedOn)
+                ? <Label color='green' horizontal>is turned on</Label>
+                : <Label color='red' horizontal>is turned off</Label>}
+              <div
+                style={{
+                  display: "flex",
+                  width: "100%",
+                  justifyContent: "center",
+                  alignItems: "center",
+                  margin: '10px'
+                }}
+              >
+                <Button onClick={increment} circular>
+                  <Icon.Group size="large">
+                    <Icon name="circle outline" size="big" color="grey" />
+                    <Icon
+                      name="power"
+                      color={`${deviceDetails.isTurnedOn ? "red" : "green"}`}
+                    />
+                  </Icon.Group>
+                </Button>
+              </div>
+            </Card.Description>
+          )}
+        </Card.Content>
+
+        {deviceDetails.type === "outlet" && (
+          <Card.Content textAlign="center">
+            Power consumption:{' '}
+            <span style={{ fontWeight: 'bold' }}>
+              {deviceDetails.powerConsumption} Watts
+            </span>
+          </Card.Content>
+        )}
+        {deviceDetails.type === "bulb" && (
+          <Card.Content>
+            <Segment>
+              <Header as="h5" color="grey">
+                Set brightness
+              </Header>
+              <div
+                style={{
+                  display: "flex",
+                  width: "100%",
+                  justifyContent: "space-between",
+                }}
+              >
+                <Button onClick={decrement} circular>
+                  <Icon.Group size="big">
+                    <Icon name="lightbulb outline" color="grey" />
+                    <Icon name="minus" corner="bottom right" />
+                  </Icon.Group>
+                </Button>
+                <Progress percent={percent} indicating />
+                <Button onClick={increment} circular>
+                  <Icon.Group size="big">
+                    <Icon name="lightbulb outline" color="yellow" />
+                    <Icon name="add" corner="bottom right" />
+                  </Icon.Group>
+                </Button>
+              </div></Segment>
+
+            <Segment inverted color='grey'>
+              <div
+                style={{
+                  display: "flex",
+                  justifyContent: "space-between",
+                  alignItems: "center",
+                }}
+              >
+                <div>
+                  <Header as="h5" color="grey">
+                    Set light color
+                  </Header>
+                  <input
+                    type="range"
+                    min="0"
+                    max={lightOptionColor.length - 1}
+                    value={activeIndex}
+                    onChange={handleSliderChange}
+                    style={{ width: "300px" }}
+                  />
+                  <div>Color light: {lightOptionColor[activeIndex].name}</div>
+                </div>
+                <div
+                  style={{
+                    height: "70px",
+                    width: "70px",
+                    borderRadius: "50px",
+                    background: `${lightOptionColor[activeIndex].color}`,
+                  }}
+                />
+              </div>
+            </Segment>
+          </Card.Content>
+        )}
+
+        {deviceDetails.type === "temperatureSensor" && (
+          <Card.Content>
+            <div
+              style={{
+                display: "flex",
+                width: "100%",
+                justifyContent: "space-between",
+              }}
+            >
+              <Button onClick={decrement} circular>
+                <Icon.Group size="big">
+                  <Icon name="thermometer empty" size="large" color="blue" />
+                </Icon.Group>
+              </Button>
+              <Progress percent={percent} indicating />
+              <Button onClick={increment} circular>
+                <Icon.Group size="big">
+                  <Icon name="thermometer full" size="large" color="red" />
+                </Icon.Group>
+              </Button>
+            </div>
+          </Card.Content>
+        )}
+      </Dimmer.Dimmable>
       <Card.Content textAlign="center">
         <ButtonComponent
           loading={isLoading}
@@ -259,6 +289,7 @@ const DeviceDetails: React.FC<DeviceDetailsProps> = () => {
           buttonColor="blue"
           isBasic
           onButtonClick={(e, data) => deleteUser(e, data)}
+          disabled={!isConnected}
         />
         {/* <ButtonComponent
           loading={isLoading}
@@ -269,6 +300,18 @@ const DeviceDetails: React.FC<DeviceDetailsProps> = () => {
           isBasic
           onButtonClick={(e, data) => deleteUser(e, data)}
         /> */}
+      </Card.Content>
+      <Card.Content>
+        {displayConnection(deviceDetails.connectionState).state ===
+          "poor connection" && (
+            <Message warning>
+              <Message.Header>
+                Warning! Control of this device might be difficult due to poor
+                connection.
+              </Message.Header>
+              <p>Check the connection</p>
+            </Message>
+          )}
       </Card.Content>
     </Card>
   );
