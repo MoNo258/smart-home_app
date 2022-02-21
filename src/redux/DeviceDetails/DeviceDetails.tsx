@@ -1,9 +1,7 @@
 import React from "react";
 import { useNavigate } from "react-router-dom";
 import {
-  Button,
-  ButtonProps,
-  Card,
+  Button, Card,
   Dimmer,
   Header,
   Icon,
@@ -27,74 +25,100 @@ const DeviceDetails: React.FC<DeviceDetailsProps> = () => {
   );
   const isLoading = useGlobalState((state) => state.deviceDetails.loading);
   const idParam = window.location.pathname;
-  const [isDeleted, setIsDeleted] = React.useState(false);
-
-  console.log("deviceDetails", deviceDetails);
-
-  const isConnected = deviceDetails.connectionState !== 'disconnected'
-
-  // React.useEffect(() => {
-  //   dispatch(DeviceDetailsAction.fetchDeviceDetails(idParam.slice(1)));
-  // }, []);
-
-  const visitHomepage = (
-    e: React.MouseEvent<HTMLButtonElement, MouseEvent>,
-    data: ButtonProps
-  ) => {
-    navigate(`/`);
-  };
-
-  const deleteUser = (
-    e: React.MouseEvent<HTMLButtonElement, MouseEvent>,
-    data: ButtonProps
-  ) => {
-    // deleteSingleUser(idParam.slice(1));
-    setIsDeleted(true);
-  };
-
+  const isConnected = deviceDetails.connectionState !== 'disconnected';
+  const [colorLigthOption, setColorLigthOption] = React.useState('');
+  const [activeColorArray, setActiveColorArray] = React.useState<ILightOption[]>([]);
+  const [activeColorLigthOption, setActiveColorLigthOption] =
+    React.useState<ILightOption>({
+      key: '',
+      name: '',
+      tempInKelvin: 0,
+      color: '',
+    });
   const [activeIndex, setActiveIndex] = React.useState(0);
-  const handleSliderChange = (e: React.ChangeEvent<HTMLInputElement>) =>
-    setActiveIndex(Number(e.target.value));
-  const lightOptionColor = [
+  const [percent, setPercent] = React.useState(0);
+  const increment = () =>
+    setPercent((prevState) => (prevState >= 100 ? 0 : prevState + 10));
+  const decrement = () =>
+    setPercent((prevState) => (prevState <= 0 ? 100 : prevState - 10));
+  const lightOptionColor: ILightOption[] = [
     {
-      key: "option-1",
+      key: "option-0",
       name: "Daylight",
       tempInKelvin: 6500,
       color: "#F1F5F8",
     },
     {
-      key: "option-2",
+      key: "option-1",
       name: "Natural white",
       tempInKelvin: 5000,
       color: "#F9FAFC",
     },
     {
-      key: "option-3",
+      key: "option-2",
       name: "Cool white",
       tempInKelvin: 4100,
       color: "#FFFCF6",
     },
     {
-      key: "option-4",
+      key: "option-3",
       name: "Warm white",
       tempInKelvin: 3500,
       color: "#FFF6E5",
     },
     {
-      key: "option-5",
+      key: "option-4",
       name: "Soft white",
       tempInKelvin: 2700,
       color: "#FFF3DB",
     },
   ];
 
-  const [percent, setPercent] = React.useState(0);
-  const increment = () =>
-    setPercent((prevState) => (prevState >= 100 ? 0 : prevState + 10));
-  const decrement = () =>
-    setPercent((prevState) => (prevState <= 0 ? 100 : prevState - 10));
+  React.useEffect(() => {
+    if (deviceDetails.type === 'bulb') {
+      setColorLigthOption(() => {
+        return deviceDetails.color
+      })
+      setPercent(deviceDetails.brightness)
+    }
+    if (deviceDetails.type === "temperatureSensor") {
+      setPercent(() => {
+        const min = 10
+        const max = 40
+        const value = deviceDetails.temperature
+        return ((value - min) * 100 / (max - min))
+      })
+    }
+  }, [deviceDetails]);
+  React.useEffect(() => {
+    if (deviceDetails.type === 'bulb') {
 
-  const [isOpen, setIsOpen] = React.useState(false);
+      setActiveColorArray(() => {
+        const temp: ILightOption[] = lightOptionColor.filter(option => option.color === colorLigthOption)
+        return temp
+      })
+    }
+  }, [colorLigthOption]);
+  React.useEffect(() => {
+    if (deviceDetails.type === 'bulb') {
+
+      setActiveColorLigthOption(() => activeColorArray[0])
+    }
+  }, [activeColorArray]);
+  React.useEffect(() => {
+    if (deviceDetails.type === 'bulb') {
+
+      setActiveIndex(() => {
+        const tempIndex = parseFloat((activeColorLigthOption.key).slice(-1))
+        return tempIndex
+      })
+    } else {
+      setActiveIndex(0)
+    }
+  }, [activeColorLigthOption]);
+
+  const handleSliderChange = (e: React.ChangeEvent<HTMLInputElement>) =>
+    setActiveIndex(Number(e.target.value));
 
   return (
     <Card fluid>
@@ -203,14 +227,18 @@ const DeviceDetails: React.FC<DeviceDetailsProps> = () => {
                     <Icon name="minus" corner="bottom right" />
                   </Icon.Group>
                 </Button>
-                <Progress percent={percent} indicating />
+                <div style={{ width: '100%', marginTop: '20px' }}>
+                  <Progress percent={percent} indicating />
+                </div>
                 <Button onClick={increment} circular>
                   <Icon.Group size="big">
                     <Icon name="lightbulb outline" color="yellow" />
                     <Icon name="add" corner="bottom right" />
                   </Icon.Group>
                 </Button>
-              </div></Segment>
+              </div>
+              <div>Brightness: {deviceDetails.brightness}</div>
+            </Segment>
 
             <Segment inverted color='grey'>
               <div
@@ -221,7 +249,7 @@ const DeviceDetails: React.FC<DeviceDetailsProps> = () => {
                 }}
               >
                 <div>
-                  <Header as="h5" color="grey">
+                  <Header as="h5" >
                     Set light color
                   </Header>
                   <input
@@ -232,7 +260,7 @@ const DeviceDetails: React.FC<DeviceDetailsProps> = () => {
                     onChange={handleSliderChange}
                     style={{ width: "300px" }}
                   />
-                  <div>Color light: {lightOptionColor[activeIndex].name}</div>
+                  <div>Color light: {deviceDetails.type === "bulb" && lightOptionColor[activeIndex].name}</div>
                 </div>
                 <div
                   style={{
@@ -248,27 +276,37 @@ const DeviceDetails: React.FC<DeviceDetailsProps> = () => {
         )}
 
         {deviceDetails.type === "temperatureSensor" && (
-          <Card.Content>
-            <div
-              style={{
-                display: "flex",
-                width: "100%",
-                justifyContent: "space-between",
-              }}
-            >
-              <Button onClick={decrement} circular>
-                <Icon.Group size="big">
-                  <Icon name="thermometer empty" size="large" color="blue" />
-                </Icon.Group>
-              </Button>
-              <Progress percent={percent} indicating />
-              <Button onClick={increment} circular>
-                <Icon.Group size="big">
-                  <Icon name="thermometer full" size="large" color="red" />
-                </Icon.Group>
-              </Button>
-            </div>
-          </Card.Content>
+          <Segment>
+            <Card.Content>
+              <div
+                style={{
+                  display: "flex",
+                  width: "100%",
+                  justifyContent: "space-between",
+                }}
+              >
+                <Button onClick={decrement} circular>
+                  <Icon.Group size="big">
+                    <Icon name="thermometer empty" size="large" color="blue" />
+                  </Icon.Group>
+                </Button>
+                <div style={{ width: '100%', marginTop: '20px' }}>
+                  <Progress percent={percent} indicating />
+                </div>
+                <Button onClick={increment} circular>
+                  <Icon.Group size="big">
+                    <Icon name="thermometer full" size="large" color="red" />
+                  </Icon.Group>
+                </Button>
+              </div>
+            </Card.Content>
+            <Card.Content textAlign="center">
+              Temperature:{' '}
+              <span style={{ fontWeight: 'bold' }}>
+                {deviceDetails.temperature} °C
+              </span>
+            </Card.Content>
+          </Segment>
         )}
       </Dimmer.Dimmable>
       <Card.Content textAlign="center">
@@ -288,7 +326,7 @@ const DeviceDetails: React.FC<DeviceDetailsProps> = () => {
           buttonText="Edit details"
           buttonColor="blue"
           isBasic
-          onButtonClick={(e, data) => deleteUser(e, data)}
+          onButtonClick={(e, data) => console.log(e, data)}
           disabled={!isConnected}
         />
         {/* <ButtonComponent

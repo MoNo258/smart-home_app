@@ -5,7 +5,7 @@ import { Card, Grid, Icon, Segment } from "semantic-ui-react";
 import {
   displayConnection,
   displayDeviceType,
-  splitArrayInGroups,
+  splitArrayInGroups
 } from "src/utils";
 import SkeletonList from "../../Components/SkeletonList";
 import { useGlobalDispatch, useGlobalState } from "../../helpers";
@@ -24,6 +24,12 @@ const DevicesList: React.FC<DevicesListProps> = () => {
   React.useEffect(() => {
     dispatch(DevicesListAction.fetchDevices());
   }, []);
+  // React.useEffect(() => {
+  //   const fechOnInterval = setInterval(() => {
+  //     dispatch(DevicesListAction.fetchDevices());
+  //   }, 600000) 
+  //   return () => clearInterval(fechOnInterval)
+  // }, []);
 
   const manySkeletons = _times(3, (i: number) => <SkeletonList key={i} />);
 
@@ -129,9 +135,8 @@ const DevicesList: React.FC<DevicesListProps> = () => {
                         Status:{" "}
                         <strong
                           style={{
-                            color: `${
-                              displayConnection(device.connectionState).color
-                            }`,
+                            color: `${displayConnection(device.connectionState).color
+                              }`,
                           }}
                         >
                           {displayConnection(device.connectionState).state}

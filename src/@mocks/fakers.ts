@@ -70,6 +70,7 @@ export const allDevicesBasic: SmartDevice[] = [
     )}` as connectionStateType,
   },
 ];
+const bulbColors = ["#F1F5F8", "#F9FAFC", "#FFFCF6", "#FFF6E5", "#FFF3DB",]
 
 const fakeDeviceDetails11: SmartDeviceDetails = {
   type: "bulb",
@@ -80,7 +81,7 @@ const fakeDeviceDetails11: SmartDeviceDetails = {
   )}` as connectionStateType,
   isTurnedOn: faker.datatype.boolean(),
   brightness: Math.floor(Math.random() * 101),
-  color: faker.vehicle.color(),
+  color: faker.random.arrayElement(bulbColors),
 };
 const fakeDeviceDetails22: SmartDeviceDetails = {
   type: "temperatureSensor",
@@ -112,7 +113,7 @@ const fakeDeviceDetails44: SmartDeviceDetails = {
   )}` as connectionStateType,
   isTurnedOn: faker.datatype.boolean(),
   brightness: Math.floor(Math.random() * 101),
-  color: faker.vehicle.color(),
+  color: faker.random.arrayElement(bulbColors),
 };
 const fakeDeviceDetails55: SmartDeviceDetails = {
   type: "temperatureSensor",
@@ -121,7 +122,7 @@ const fakeDeviceDetails55: SmartDeviceDetails = {
   connectionState: `${faker.random.arrayElement(
     connectionState
   )}` as connectionStateType,
-  temperature: faker.datatype.number({ min: 15, max: 38, precision: 0.01 }),
+  temperature: faker.datatype.number({ min: 10, max: 40, precision: 0.01 }),
 };
 const fakeDeviceDetails66: SmartDeviceDetails = {
   type: "outlet",

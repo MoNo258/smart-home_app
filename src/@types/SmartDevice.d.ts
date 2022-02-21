@@ -17,10 +17,6 @@ interface SmartBulb {
   isTurnedOn: boolean;
   brightness: number; // <0, 100>
   color: InstanceType<typeof React.HTMLAttributes.color>; // in the CSS formats
-  //   color: typeof React.HTMLAttributes<T>.color; // in the CSS formats
-  //   color: string; // in the CSS formats
-  // React.HTMLAttributes<T>.color?: string | undefined
-  // React.HTMLAttributes<HTMLAnchorElement>.color?: string
 }
 
 interface SmartOutlet {
@@ -54,4 +50,10 @@ interface DevicesDetailsState {
 type MockDeviceIdType = 11 | 22 | 33 | 44 | 55 | 66 | 77;
 interface MockDeviceIdInterface {
   deviceId: MockDeviceIdType;
+}
+interface ILightOption {
+  key: string;
+  name: string;
+  tempInKelvin: number;
+  color: string
 }
