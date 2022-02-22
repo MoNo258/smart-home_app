@@ -1,7 +1,7 @@
 import _times from "lodash/times";
 import React from "react";
 import { useNavigate } from "react-router-dom";
-import { Breadcrumb, MenuItemProps } from "semantic-ui-react";
+import { MenuItemProps } from "semantic-ui-react";
 import MenuComponent from "src/Components/MenuComponent";
 import styled from "styled-components";
 import SkeletonList from "../../Components/SkeletonList";
@@ -17,17 +17,10 @@ const Home: React.FC = () => {
   const dispatch = useGlobalDispatch();
   const devicesList = useGlobalState((state) => state.devicesList.devicesList);
   const isLoading = useGlobalState((state) => state.devicesList.loading);
-
   const manySkeletons = _times(3, (i: number) => <SkeletonList key={i} />);
   const [activeItem, setActiveItem] = React.useState<string | undefined>(
     "devices"
   );
-
-  const sections = [
-    { key: "Home", content: "Home", link: true },
-    { key: "Store", content: "Store", link: true },
-    { key: "Shirt", content: "T-Shirt", active: true },
-  ];
 
   const handleMenuItemClick = (
     e: React.MouseEvent<HTMLAnchorElement, MouseEvent>,
@@ -39,7 +32,6 @@ const Home: React.FC = () => {
 
   return (
     <HomeStyled className="home">
-      <Breadcrumb icon="right angle" sections={sections} />
       <MenuComponent
         activeItem={activeItem}
         handleMenuItemClick={handleMenuItemClick}

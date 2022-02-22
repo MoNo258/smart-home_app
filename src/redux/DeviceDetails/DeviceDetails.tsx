@@ -30,17 +30,21 @@ const DeviceDetails: React.FC<DeviceDetailsProps> = () => {
   const [activeColorArray, setActiveColorArray] = React.useState<ILightOption[]>([]);
   const [activeColorLigthOption, setActiveColorLigthOption] =
     React.useState<ILightOption>({
-      key: '',
-      name: '',
+      key: "",
+      name: "",
       tempInKelvin: 0,
-      color: '',
+      color: "",
     });
   const [activeIndex, setActiveIndex] = React.useState(0);
   const [percent, setPercent] = React.useState(0);
-  const increment = () =>
+  const increment = () => {
     setPercent((prevState) => (prevState >= 100 ? 0 : prevState + 10));
-  const decrement = () =>
+    console.log('change temp/brightness in API source and display correct value');
+  }
+  const decrement = () => {
     setPercent((prevState) => (prevState <= 0 ? 100 : prevState - 10));
+    console.log('change temp/brightness in API source and display correct value');
+  }
   const lightOptionColor: ILightOption[] = [
     {
       key: "option-0",
@@ -76,9 +80,7 @@ const DeviceDetails: React.FC<DeviceDetailsProps> = () => {
 
   React.useEffect(() => {
     if (deviceDetails.type === 'bulb') {
-      setColorLigthOption(() => {
-        return deviceDetails.color
-      })
+      setColorLigthOption(deviceDetails.color)
       setPercent(deviceDetails.brightness)
     }
     if (deviceDetails.type === "temperatureSensor") {
@@ -92,7 +94,6 @@ const DeviceDetails: React.FC<DeviceDetailsProps> = () => {
   }, [deviceDetails]);
   React.useEffect(() => {
     if (deviceDetails.type === 'bulb') {
-
       setActiveColorArray(() => {
         const temp: ILightOption[] = lightOptionColor.filter(option => option.color === colorLigthOption)
         return temp
@@ -100,14 +101,12 @@ const DeviceDetails: React.FC<DeviceDetailsProps> = () => {
     }
   }, [colorLigthOption]);
   React.useEffect(() => {
-    if (deviceDetails.type === 'bulb') {
-
+    if (deviceDetails.type === 'bulb' && activeColorArray.length > 0) {
       setActiveColorLigthOption(() => activeColorArray[0])
     }
   }, [activeColorArray]);
   React.useEffect(() => {
-    if (deviceDetails.type === 'bulb') {
-
+    if (deviceDetails.type === 'bulb' && activeColorLigthOption.key.length > 0) {
       setActiveIndex(() => {
         const tempIndex = parseFloat((activeColorLigthOption.key).slice(-1))
         return tempIndex
@@ -186,7 +185,7 @@ const DeviceDetails: React.FC<DeviceDetailsProps> = () => {
                   margin: '10px'
                 }}
               >
-                <Button onClick={increment} circular>
+                <Button onClick={() => console.log('power on/off toggle')} circular>
                   <Icon.Group size="large">
                     <Icon name="circle outline" size="big" color="grey" />
                     <Icon
@@ -237,7 +236,7 @@ const DeviceDetails: React.FC<DeviceDetailsProps> = () => {
                   </Icon.Group>
                 </Button>
               </div>
-              <div>Brightness: {deviceDetails.brightness}</div>
+              <div style={{ textAlign: 'center' }}>Brightness: {deviceDetails.brightness}</div>
             </Segment>
 
             <Segment inverted color='grey'>
